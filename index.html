@@ -156,10 +156,10 @@
         for (let i = 0; i < 3; i++) {
           const random = symbols[Math.floor(Math.random() * symbols.length)];
           reels[i].textContent = random;
-          if (counter === 10) results[i] = random;
+          if (counter === 50) results[i] = random;
         }
         counter++;
-        if (counter > 10) {
+        if (counter > 50) {
           clearInterval(interval);
           const [a,b,c] = results;
           if (a === b && b === c) {
