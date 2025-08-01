@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>RONZ GAMES</title>
+  <style>
+    body {
+      background: linear-gradient(to right, #000428, #004e92);
+      color: #fff;
+      font-family: Arial, sans-serif;
+      text-align: center;
+      margin: 0;
+    }
+    header {
+      padding: 20px;
+      background: #000;
+      box-shadow: 0 0 20px #0ff;
+    }
+    h1 {
+      margin: 0;
+      font-size: 2em;
+      text-shadow: 0 0 10px #0ff;
+    }
+    .chip {
+      color: #0f0;
+      font-size: 1.3em;
+    }
+    .games, .login {
+      margin-top: 20px;
+    }
+    .game {
+      background: #111;
+      border: 1px solid #333;
+      padding: 20px;
+      margin: 10px auto;
+      width: 250px;
+      border-radius: 10px;
+      box-shadow: 0 0 10px #0ff;
+      cursor: pointer;
+    }
+    .slot-display, .dice-display {
+      display: flex;
+      justify-content: center;
+      margin: 10px 0;
+      font-size: 2em;
+    }
+    .reel, .dice {
+      width: 50px;
+      height: 50px;
+      margin: 0 5px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: #000;
+      border: 2px solid #0ff;
+      box-shadow: 0 0 10px #0ff;
+      font-size: 2em;
+      animation: spin 0.5s ease-in-out;
+    }
+    @keyframes spin {
+      0% { transform: rotateX(0); opacity: 0; }
+      100% { transform: rotateX(360deg); opacity: 1; }
+    }
+    input, button {
+      margin: 5px;
+      padding: 10px;
+      border: none;
+      border-radius: 5px;
+    }
+    button {
+      background: #0ff;
+      color: #000;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>RONZ GAMES</h1>
+    <div class="chip">Chips: <span id="chipCount">0</span></div>
+    <button onclick="claimDaily()">Klaim 5000 Chip Harian</button><br><p>Ingat ini hanya untuk hiburan semata,dan tidak mengandung unsur Judi!!!!!</p>
+  </header>
+
+  <div class="games">
+    <div class="game" onclick="playSlot()">
+      <h3>🎰 Slot Machine</h3>
+      <div class="slot-display">
+        <div class="reel" id="reel1">❓</div>
+        <div class="reel" id="reel2">❓</div>
+        <div class="reel" id="reel3">❓</div>
+      </div>
+      <p>Klik Putar dan Menang!</p>
+    </div>
+    <div class="game" onclick="playDice()">
+      <h3>🎲 Dadu Ajaib</h3>
+      <div class="dice-display">
+        <div class="dice" id="dice1">❓</div>
+        <div class="dice" id="dice2">❓</div>
+        <div class="dice" id="dice3">❓</div>
+      </div>
+      <p>Dapatkan triple 6 untuk menang!</p>
+    </div>
+  </div>
+
+  <div class="login">
+    <input id="username" placeholder="Nama pengguna" />
+    <button onclick="login()">Login</button>
+  </div>
+
+  <audio id="spinSound" src="songs/slot-machine-reels-sound-30276.mp3"></audio>
+  <audio id="winSound" src="songs/win.mp3"></audio>
+
+  <script>
+    let user = null;
+    let chips = 0;
+    let lastClaim = null;
+
+    async function login() {
+      const input = document.getElementById('username');
+      const name = input.value.trim();
+      if (!name) return alert('Masukkan nama');
+      user = name;
+      localStorage.setItem('username', user);
+      const res = await fetch(`/api/get-user?username=${user}`);
+      if (res.ok) {
+        const data = await res.json();
+        chips = data.chips;
+        lastClaim = data.lastClaim;
+      } else {
+        chips = 10000;
+        lastClaim = null;
+        await saveUser();
+        alert('Akun baru dibuat!');
+      }
+      updateChip();
+    }
+
+    async function saveUser() {
+      await fetch('/api/save-user', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ username: user, chips, lastClaim })
+      });
+    }
+
+    function updateChip() {
+      document.getElementById('chipCount').textContent = chips;
+    }
+
+    async function claimDaily() {
+      if (!user) return alert('Login dulu!');
+      const today = new Date().toISOString().slice(0, 10);
+      if (lastClaim === today) return alert('Sudah klaim hari ini');
+      chips += 5000;
+      lastClaim = today;
+      updateChip();
+      await saveUser();
+      alert('+5000 Chip Harian!');
+    }
+
+    function playSound(id) {
+      const audio = document.getElementById(id);
+      if (audio) {
+        audio.currentTime = 0;
+        audio.play();
+      }
+    }
+
+    async function playSlot() {
+      if (!user) return alert('Login dulu!');
+      if (chips < 100) return alert('Chip tidak cukup');
+      const symbols = ['🍒','🍋','7️','💎'];
+      const spin = [0, 0, 0].map(() => symbols[Math.floor(Math.random()*symbols.length)]);
+
+      document.getElementById('reel1').textContent = '🎰';
+      document.getElementById('reel2').textContent = '🎰';
+      document.getElementById('reel3').textContent = '🎰';
+      playSound('spinSound');
+      await new Promise(resolve => setTimeout(resolve, 1000));
+
+      document.getElementById('reel1').textContent = spin[0];
+      document.getElementById('reel2').textContent = spin[1];
+      document.getElementById('reel3').textContent = spin[2];
+
+      if (spin[0] === spin[1] && spin[1] === spin[2]) {
+        chips += 500;
+        playSound('winSound');
+        alert('Menang +500!');
+      } else {
+        chips -= 100;
+      }
+      updateChip();
+      await saveUser();
+    }
+
+    async function playDice() {
+      if (!user) return alert('Login dulu!');
+      if (chips < 100) return alert('Chip tidak cukup');
+      const diceValues = [1, 2, 3, 4, 5, 6];
+      const roll = [0, 0, 0].map(() => diceValues[Math.floor(Math.random()*diceValues.length)]);
+
+      document.getElementById('dice1').textContent = '🎲';
+      document.getElementById('dice2').textContent = '🎲';
+      document.getElementById('dice3').textContent = '🎲';
+      playSound('spinSound');
+      await new Promise(resolve => setTimeout(resolve, 1000));
+
+      document.getElementById('dice1').textContent = roll[0];
+      document.getElementById('dice2').textContent = roll[1];
+      document.getElementById('dice3').textContent = roll[2];
+
+      if (roll[0] === 6 && roll[1] === 6 && roll[2] === 6) {
+        chips += 1000;
+        playSound('winSound');
+        alert('Triple 6! Menang +1000!');
+      } else {
+        chips -= 100;
+      }
+      updateChip();
+      await saveUser();
+    }
+
+    const stored = localStorage.getItem('username');
+    if (stored) {
+      document.getElementById('username').value = stored;
+      login();
+    }
+  </script>
+</body>
+</html>
