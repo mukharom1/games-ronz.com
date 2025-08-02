@@ -10,5 +10,5 @@ GAME AJA JANGAN DI PIKIRIN 🗿
 # GAME INI DI SERTAI HAK CIPTA
 
 **open donasi kakak, untuk update games nya ✨**
-<img src=https://files.catbox.moe/ylvkwz.png>
+<img src="https://files.catbox.moe/ylvkwz.png">
 # RONZ PROJECT-2025
