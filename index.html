@@ -1,0 +1,770 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>RONZ GAMES - Kumpulan Game Mini</title>
+  <style>
+    :root {
+      --primary-bg: #1a1a2e;
+      --secondary-bg: #16213e;
+      --card-bg: rgba(30, 30, 50, 0.85);
+      --text-color: #e0e0e0;
+      --accent-color-1: #ff8a00;
+      --accent-color-2: #e52e71;
+      --btn-bg-1: #3a3a5a;
+      --btn-bg-2: #2a2a4a;
+      --btn-hover-bg-1: #4a4a6a;
+      --btn-hover-bg-2: #3a3a5a;
+    }
+    
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+    
+    body {
+      background: linear-gradient(135deg, var(--primary-bg) 0%, var(--secondary-bg) 100%);
+      color: var(--text-color);
+      min-height: 100vh;
+      padding: 20px;
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+    }
+    
+    .container {
+      width: 100%;
+      max-width: 1400px;
+      margin: 0 auto;
+    }
+    
+    header {
+      text-align: center;
+      padding: 20px 0;
+      background: rgba(0, 0, 0, 0.3);
+      border-radius: 15px;
+      margin-bottom: 25px;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+    
+    h1 {
+      font-size: 2.8rem;
+      margin-bottom: 10px;
+      background: linear-gradient(to right, var(--accent-color-1), var(--accent-color-2));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      font-weight: 800;
+    }
+    
+    .coin-display {
+      display: inline-flex;
+      align-items: center;
+      background: rgba(0, 0, 0, 0.7);
+      padding: 8px 25px;
+      border-radius: 30px;
+      font-size: 1.4rem;
+      margin-top: 10px;
+      border: 1px solid var(--accent-color-1);
+    }
+
+    #coins {
+        margin-left: 10px;
+        font-weight: bold;
+    }
+    
+    .game-container {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 30px;
+      margin-top: 20px;
+    }
+    
+    .game-list {
+      flex: 1;
+      min-width: 280px;
+      background: var(--card-bg);
+      border-radius: 15px;
+      padding: 20px;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      height: fit-content;
+    }
+
+    .game-list h2 {
+        border-bottom: 2px solid var(--accent-color-1);
+        padding-bottom: 10px;
+        margin-bottom: 15px;
+    }
+    
+    .game-btn {
+      display: block;
+      width: 100%;
+      padding: 12px 8px;
+      background: linear-gradient(to bottom, var(--btn-bg-1), var(--btn-bg-2));
+      color: var(--text-color);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      border-radius: 10px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      font-size: 1rem;
+      margin: 8px 0;
+      text-align: left;
+    }
+    
+    .game-btn:hover {
+      background: linear-gradient(to bottom, var(--btn-hover-bg-1), var(--btn-hover-bg-2));
+      border-color: var(--accent-color-1);
+      transform: translateY(-2px);
+    }
+    
+    .game-area {
+      flex: 3;
+      min-width: 300px;
+      background: var(--card-bg);
+      border-radius: 15px;
+      padding: 25px;
+      display: flex;
+      flex-direction: column;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      min-height: 500px;
+    }
+    
+    .game-title {
+      font-size: 2rem;
+      margin-bottom: 20px;
+      color: var(--accent-color-2);
+      font-weight: 700;
+    }
+
+    .game-content {
+        flex-grow: 1;
+    }
+    
+    .result-box {
+      margin-top: 20px;
+      padding: 15px;
+      border-radius: 10px;
+      background: rgba(0, 0, 0, 0.5);
+      text-align: center;
+      font-size: 1.1rem;
+      min-height: 50px;
+      border: 1px solid transparent;
+      transition: all 0.3s ease;
+    }
+
+    .result-box.win {
+        background-color: rgba(46, 204, 113, 0.2);
+        border-color: #2ecc71;
+    }
+
+    .result-box.lose {
+        background-color: rgba(231, 76, 60, 0.2);
+        border-color: #e74c3c;
+    }
+    
+    /* Tombol dan Input di dalam Game */
+    .game-input {
+        width: 100%;
+        padding: 12px;
+        font-size: 1rem;
+        border-radius: 8px;
+        border: 2px solid var(--btn-bg-1);
+        background-color: #1e1e30;
+        color: var(--text-color);
+        margin: 10px 0;
+    }
+
+    .game-action-btn {
+        padding: 12px 25px;
+        background: linear-gradient(to right, var(--accent-color-1), var(--accent-color-2));
+        color: #fff;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+        transition: transform 0.2s ease;
+        font-size: 1rem;
+        font-weight: bold;
+    }
+
+    .game-action-btn:hover {
+        transform: scale(1.05);
+    }
+
+    /* Style untuk Game Spesifik */
+    #batuGuntingKertasChoices button {
+        font-size: 2rem;
+        margin: 0 10px;
+        padding: 15px;
+    }
+
+    #memoryGrid {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 10px;
+        max-width: 400px;
+        margin: 20px auto;
+    }
+    .card {
+        width: 100%;
+        height: 80px;
+        background-color: var(--btn-hover-bg-1);
+        border-radius: 8px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-size: 2rem;
+        cursor: pointer;
+        transform-style: preserve-3d;
+        transition: transform 0.5s;
+    }
+    .card-inner {
+        position: relative;
+        width: 100%;
+        height: 100%;
+        text-align: center;
+        transition: transform 0.6s;
+        transform-style: preserve-3d;
+    }
+    .card.flipped .card-inner {
+        transform: rotateY(180deg);
+    }
+    .card-front, .card-back {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        -webkit-backface-visibility: hidden;
+        backface-visibility: hidden;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        border-radius: 8px;
+    }
+    .card-front {
+        background: linear-gradient(to bottom, var(--btn-bg-1), var(--btn-bg-2));
+    }
+    .card-back {
+        background-color: var(--btn-hover-bg-2);
+        transform: rotateY(180deg);
+        font-size: 2.5rem;
+    }
+
+    #reactionBox {
+        width: 100%;
+        height: 200px;
+        margin: 20px 0;
+        border-radius: 15px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+        font-size: 1.5rem;
+        cursor: pointer;
+        transition: background-color 0.2s;
+    }
+
+    #mole-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 15px;
+        width: 300px;
+        margin: 20px auto;
+    }
+    .hole {
+        width: 90px;
+        height: 90px;
+        background-color: #332314;
+        border-radius: 50%;
+        position: relative;
+        overflow: hidden;
+        border: 5px solid #5a3d23;
+    }
+    .mole {
+        width: 70%;
+        position: absolute;
+        bottom: -100%;
+        left: 15%;
+        transition: bottom 0.2s ease-in-out;
+        cursor: pointer;
+    }
+    .mole.active {
+        bottom: 10px;
+    }
+
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>🎮 RONZ GAMES 🔥🔥</h1>
+      <div class="coin-display">
+        Koin: <span id="coins">0</span>
+      </div>
+    </header>
+    
+    <div class="game-container">
+      <div class="game-list">
+        <h2>Daftar Game</h2>
+        <button class="game-btn" onclick="startGame('tebakAngka')">1. Tebak Angka</button>
+        <button class="game-btn" onclick="startGame('hitungCepat')">2. Hitung Cepat</button>
+        <button class="game-btn" onclick="startGame('batuGuntingKertas')">3. Batu Gunting Kertas</button>
+        <button class="game-btn" onclick="startGame('pilihWarnaTeks')">4. Pilih Warna Teks</button>
+        <button class="game-btn" onclick="startGame('memoryCard')">5. Memory Card</button>
+        <button class="game-btn" onclick="startGame('reaksiCepat')">6. Reaksi Cepat</button>
+        <button class="game-btn" onclick="startGame('tebakEmoji')">7. Tebak Emoji</button>
+        <button class="game-btn" onclick="startGame('ketukTikusTanah')">8. Ketuk Tikus Tanah</button>
+        <button class="game-btn" onclick="startGame('tekaTekiKata')">9. Teka-Teki Kata</button>
+        <button class="game-btn" onclick=`https:/\/mukharom1.github.io/games-ronz2.com`>GAMES SELANJUTNYA</button>
+        </div>
+      
+      <div class="game-area">
+        <div class="game-title" id="gameTitle">Selamat Datang!</div>
+        <div class="game-content" id="gameContent">
+          <p>Silakan pilih game dari daftar di sebelah kiri untuk memulai petualangan Anda.<br><br>Kumpulkan koin sebanyak-banyaknya dengan memenangkan setiap permainan. Selamat bermain!</p>
+        </div>
+        <div class="result-box" id="resultBox"></div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    let coins = 0;
+    const gameTitle = document.getElementById('gameTitle');
+    const gameContent = document.getElementById('gameContent');
+    const resultBox = document.getElementById('resultBox');
+    
+    // Variabel global untuk state game tertentu agar bisa di-reset
+    let reactionTimeout;
+    let moleInterval;
+
+    function updateCoins(amount) {
+        coins += amount;
+        document.getElementById('coins').innerText = coins;
+    }
+    
+    function showResult(message, isWin) {
+        resultBox.innerText = message;
+        resultBox.className = 'result-box'; // Reset class
+        if (isWin === true) {
+            resultBox.classList.add('win');
+        } else if (isWin === false) {
+            resultBox.classList.add('lose');
+        }
+    }
+
+    function startGame(game) {
+        // Hentikan interval atau timeout dari game sebelumnya
+        clearTimeout(reactionTimeout);
+        clearInterval(moleInterval);
+
+        showResult('', null); // Hapus hasil sebelumnya
+        switch (game) {
+            case 'tebakAngka': tebakAngka(); break;
+            case 'hitungCepat': hitungCepat(); break;
+            case 'batuGuntingKertas': batuGuntingKertas(); break;
+            case 'pilihWarnaTeks': pilihWarnaTeks(); break;
+            case 'memoryCard': memoryCard(); break;
+            case 'reaksiCepat': reaksiCepat(); break;
+            case 'tebakEmoji': tebakEmoji(); break;
+            case 'ketukTikusTanah': ketukTikusTanah(); break;
+            case 'tekaTekiKata': tekaTekiKata(); break;
+            default:
+                gameTitle.innerText = 'Error';
+                gameContent.innerHTML = '<p>Game tidak ditemukan.</p>';
+        }
+    }
+
+    // --- Game 1: Tebak Angka ---
+    function tebakAngka() {
+        gameTitle.innerText = 'Tebak Angka';
+        const number = Math.floor(Math.random() * 10) + 1;
+        gameContent.innerHTML = `
+            <p>Aku memikirkan sebuah angka antara 1 sampai 10. Angka berapakah itu?</p>
+            <input type="number" id="guess" class="game-input" min="1" max="10" placeholder="Masukkan tebakanmu...">
+            <button class="game-action-btn" onclick="checkGuess(${number})">Tebak!</button>
+        `;
+    }
+
+    function checkGuess(number) {
+        const guess = parseInt(document.getElementById('guess').value);
+        if (isNaN(guess)) {
+            showResult('Mohon masukkan angka yang valid.', false);
+            return;
+        }
+        if (guess === number) {
+            showResult('✅ Tepat sekali! Kamu mendapatkan 10 koin.', true);
+            updateCoins(10);
+            gameContent.innerHTML += `<br><br><button class="game-action-btn" onclick="tebakAngka()">Main Lagi</button>`;
+        } else {
+            showResult(`❌ Salah! Angka yang benar adalah ${number}. Coba lagi ya.`, false);
+            gameContent.innerHTML += `<br><br><button class="game-action-btn" onclick="tebakAngka()">Coba Lagi</button>`;
+        }
+        document.querySelector('.game-action-btn').disabled = true; // Nonaktifkan tombol tebak
+    }
+
+    // --- Game 2: Hitung Cepat ---
+    function hitungCepat() {
+        gameTitle.innerText = 'Hitung Cepat';
+        const a = Math.floor(Math.random() * 20) + 1;
+        const b = Math.floor(Math.random() * 20) + 1;
+        const operator = ['+', '-', '*'][Math.floor(Math.random() * 3)];
+        let correctAnswer;
+        switch(operator) {
+            case '+': correctAnswer = a + b; break;
+            case '-': correctAnswer = a - b; break;
+            case '*': correctAnswer = a * b; break;
+        }
+
+        gameContent.innerHTML = `
+            <p style="font-size: 1.5rem; font-weight: bold;">Berapakah ${a} ${operator} ${b}?</p>
+            <input type="number" id="answer" class="game-input" placeholder="Masukkan jawabanmu...">
+            <button class="game-action-btn" onclick="checkAnswer(${correctAnswer})">Cek Jawaban</button>
+        `;
+    }
+
+    function checkAnswer(correctAnswer) {
+        const answer = parseInt(document.getElementById('answer').value);
+        if (isNaN(answer)) {
+            showResult('Mohon masukkan jawaban yang valid.', false);
+            return;
+        }
+        if (answer === correctAnswer) {
+            showResult('✅ Benar! Kamu mendapatkan 15 koin.', true);
+            updateCoins(15);
+        } else {
+            showResult(`❌ Salah! Jawaban yang benar adalah ${correctAnswer}.`, false);
+        }
+        gameContent.innerHTML += `<br><br><button class="game-action-btn" onclick="hitungCepat()">Soal Berikutnya</button>`;
+        document.querySelector('.game-action-btn').disabled = true;
+    }
+
+    // --- Game 3: Batu Gunting Kertas ---
+    function batuGuntingKertas() {
+        gameTitle.innerText = 'Batu Gunting Kertas';
+        gameContent.innerHTML = `
+            <p>Pilih jagoanmu untuk melawan komputer!</p>
+            <div id="batuGuntingKertasChoices" style="margin-top: 20px;">
+                <button class="game-action-btn" onclick="playBatuGuntingKertas('Batu')">🪨</button>
+                <button class="game-action-btn" onclick="playBatuGuntingKertas('Gunting')">✂️</button>
+                <button class="game-action-btn" onclick="playBatuGuntingKertas('Kertas')">📜</button>
+            </div>
+        `;
+    }
+
+    function playBatuGuntingKertas(userChoice) {
+        const choices = ['Batu', 'Gunting', 'Kertas'];
+        const choiceMap = { 'Batu': '🪨', 'Gunting': '✂️', 'Kertas': '📜'};
+        const computerChoice = choices[Math.floor(Math.random() * 3)];
+        let result;
+        let win = null;
+
+        if (userChoice === computerChoice) {
+            result = 'Seri!';
+        } else if (
+            (userChoice === 'Batu' && computerChoice === 'Gunting') ||
+            (userChoice === 'Gunting' && computerChoice === 'Kertas') ||
+            (userChoice === 'Kertas' && computerChoice === 'Batu')
+        ) {
+            result = 'Kamu Menang!';
+            win = true;
+            updateCoins(5);
+        } else {
+            result = 'Kamu Kalah!';
+            win = false;
+        }
+        showResult(`Kamu: ${choiceMap[userChoice]} vs Komputer: ${choiceMap[computerChoice]}. ${result}`, win);
+        gameContent.innerHTML += `<br><br><button class="game-action-btn" onclick="batuGuntingKertas()">Main Lagi</button>`;
+        document.querySelectorAll('#batuGuntingKertasChoices button').forEach(btn => btn.disabled = true);
+    }
+    
+    // --- Game 4: Pilih Warna Teks (Stroop Test) ---
+    function pilihWarnaTeks() {
+        gameTitle.innerText = 'Pilih Warna Teks';
+        const colors = [
+            { name: 'Merah', code: '#e74c3c' },
+            { name: 'Biru', code: '#3498db' },
+            { name: 'Hijau', code: '#2ecc71' },
+            { name: 'Kuning', code: '#f1c40f' }
+        ];
+        
+        const correctColor = colors[Math.floor(Math.random() * colors.length)];
+        const textDisplayColor = colors[Math.floor(Math.random() * colors.length)];
+
+        gameContent.innerHTML = `
+            <p>Klik tombol yang sesuai dengan <strong>NAMA WARNA</strong> di bawah ini (bukan warna tulisannya).</p>
+            <div style="font-size: 3rem; font-weight: bold; color: ${textDisplayColor.code}; margin: 20px 0;">
+                ${correctColor.name}
+            </div>
+            <div id="color-choices"></div>
+            <br><br><button class="game-action-btn" onclick="pilihWarnaTeks()">Lanjut</button>
+        `;
+        
+        const choicesContainer = document.getElementById('color-choices');
+        colors.forEach(color => {
+            const button = document.createElement('button');
+            button.innerText = color.name;
+            button.className = 'game-action-btn';
+            button.style.margin = '5px';
+            button.style.backgroundColor = color.code;
+            button.onclick = () => checkColorChoice(color.name, correctColor.name);
+            choicesContainer.appendChild(button);
+        });
+    }
+
+    function checkColorChoice(chosen, correct) {
+        if (chosen === correct) {
+            showResult('✅ Benar! Kamu dapat 20 koin.', true);
+            updateCoins(20);
+        } else {
+            showResult('❌ Salah! Coba lagi di soal berikutnya.', false);
+        }
+        document.querySelectorAll('#color-choices button').forEach(btn => btn.disabled = true);
+    }
+
+
+    // --- Game 5: Memory Card ---
+    let flippedCards = [];
+    let matchedPairs = 0;
+    let lockBoard = false;
+
+    function memoryCard() {
+        gameTitle.innerText = 'Memory Card';
+        const emojis = ['🥦','🥬','🥥','🍇','🍉','🍑','🍌','🍏','🍓','🫐','🥜','🥐','🥞','🍔','🍟','🥯','🍥'];
+        const gameEmojis = [...emojis, ...emojis].sort(() => 0.5 - Math.random());
+        
+        let gridHTML = '';
+        gameEmojis.forEach((emoji, index) => {
+            gridHTML += `
+              <div class="card" data-emoji="${emoji}" onclick="flipCard(this)">
+                <div class="card-inner">
+                  <div class="card-front"></div>
+                  <div class="card-back">${emoji}</div>
+                </div>
+              </div>
+            `;
+        });
+        
+        gameContent.innerHTML = `
+            <p>Cari dan cocokkan semua pasangan kartu yang sama!</p>
+            <div id="memoryGrid">${gridHTML}</div>
+        `;
+
+        flippedCards = [];
+        matchedPairs = 0;
+        lockBoard = false;
+    }
+
+    function flipCard(card) {
+        if (lockBoard || card.classList.contains('flipped') || card === flippedCards[0]) return;
+
+        card.classList.add('flipped');
+        flippedCards.push(card);
+
+        if (flippedCards.length === 2) {
+            lockBoard = true;
+            checkForMatch();
+        }
+    }
+
+    function checkForMatch() {
+        const [card1, card2] = flippedCards;
+        const isMatch = card1.dataset.emoji === card2.dataset.emoji;
+
+        if (isMatch) {
+            disableCards();
+        } else {
+            unflipCards();
+        }
+    }
+
+    function disableCards() {
+        matchedPairs++;
+        showResult('Pasangan ditemukan!', null);
+        flippedCards = [];
+        lockBoard = false;
+
+        if (matchedPairs === 8) {
+            showResult('🎉 Selamat! Kamu menyelesaikan game dan mendapat 50 koin!', true);
+            updateCoins(50);
+            gameContent.innerHTML += `<br><br><button class="game-action-btn" onclick="memoryCard()">Main Lagi</button>`;
+        }
+    }
+
+    function unflipCards() {
+        setTimeout(() => {
+            flippedCards[0].classList.remove('flipped');
+            flippedCards[1].classList.remove('flipped');
+            flippedCards = [];
+            lockBoard = false;
+            showResult('Bukan pasangan. Coba lagi.', false);
+        }, 1200);
+    }
+    
+    // --- Game 6: Reaksi Cepat ---
+    let reactionStartTime;
+    function reaksiCepat() {
+        gameTitle.innerText = 'Reaksi Cepat';
+        gameContent.innerHTML = `
+            <p>Klik kotak di bawah ini secepat mungkin saat warnanya berubah menjadi HIJAU.</p>
+            <div id="reactionBox" style="background-color: #e74c3c;">Klik untuk memulai</div>
+        `;
+        const box = document.getElementById('reactionBox');
+        box.onclick = () => startReactionTest(box);
+    }
+
+    function startReactionTest(box) {
+        box.style.backgroundColor = '#f39c12'; // Oranye = Tunggu
+        box.innerText = 'Tunggu...';
+        box.onclick = () => clickedTooSoon(box);
+        
+        const delay = Math.random() * 4000 + 1000; // 1-5 detik
+        reactionTimeout = setTimeout(() => {
+            box.style.backgroundColor = '#2ecc71'; // Hijau = Klik!
+            box.innerText = 'KLIK SEKARANG!';
+            reactionStartTime = Date.now();
+            box.onclick = () => clickedOnTime(box);
+        }, delay);
+    }
+    
+    function clickedTooSoon(box) {
+        clearTimeout(reactionTimeout);
+        showResult('❌ Terlalu cepat! Coba lagi dari awal.', false);
+        box.style.backgroundColor = '#e74c3c';
+        box.innerText = 'Gagal! Klik untuk coba lagi.';
+        box.onclick = () => startReactionTest(box);
+    }
+
+    function clickedOnTime(box) {
+        const reactionTime = Date.now() - reactionStartTime;
+        const points = Math.max(0, 25 - Math.floor(reactionTime / 50));
+        updateCoins(points);
+        showResult(`✅ Waktu reaksimu: ${reactionTime}ms. Kamu dapat ${points} koin!`, true);
+        box.style.backgroundColor = '#3498db';
+        box.innerText = 'Hebat! Klik untuk main lagi.';
+        box.onclick = () => startReactionTest(box);
+    }
+
+    // --- Game 7: Tebak Emoji ---
+    const emojiPuzzles = [
+        { emoji: '👨‍💻 + ☕', answer: 'programmer' },
+        { emoji: '🏠 + 🔑', answer: 'kunci rumah' },
+        { emoji: '🍔 + 👑', answer: 'burger king' },
+        { emoji: '👨‍🚀 + 🌕', answer: 'astronot' },
+        { emoji: '📖 + 🐛', answer: 'kutu buku' },
+    ];
+    let currentEmojiPuzzle;
+
+    function tebakEmoji() {
+        gameTitle.innerText = 'Tebak Emoji';
+        currentEmojiPuzzle = emojiPuzzles[Math.floor(Math.random() * emojiPuzzles.length)];
+        gameContent.innerHTML = `
+            <p>Coba tebak arti dari rangkaian emoji di bawah ini:</p>
+            <div style="font-size: 3rem; margin: 20px 0;">${currentEmojiPuzzle.emoji}</div>
+            <input type="text" id="emojiGuess" class="game-input" placeholder="Jawabanmu...">
+            <button class="game-action-btn" onclick="checkEmojiGuess()">Tebak!</button>
+        `;
+    }
+
+    function checkEmojiGuess() {
+        const guess = document.getElementById('emojiGuess').value.trim().toLowerCase();
+        if (guess === currentEmojiPuzzle.answer) {
+            showResult('✅ Benar sekali! Kamu dapat 20 koin!', true);
+            updateCoins(20);
+        } else {
+            showResult(`❌ Hampir benar! Jawaban yang tepat adalah "${currentEmojiPuzzle.answer}".`, false);
+        }
+        gameContent.innerHTML += `<br><br><button class="game-action-btn" onclick="tebakEmoji()">Soal Berikutnya</button>`;
+        document.querySelector('.game-action-btn').disabled = true;
+    }
+
+    // --- Game 8: Ketuk Tikus Tanah ---
+    let moleScore;
+    function ketukTikusTanah() {
+        gameTitle.innerText = 'Ketuk Tikus Tanah';
+        moleScore = 0;
+        gameContent.innerHTML = `
+            <p>Skor: <span id="mole-score">0</span> | Waktu: <span id="mole-time">30</span></p>
+            <div id="mole-grid">
+                ${Array(9).fill('<div class="hole"><img src="https://i.ibb.co/C0kCvpS/mole.png" class="mole"></div>').join('')}
+            </div>
+            <button class="game-action-btn" onclick="startMoleGame()">Mulai!</button>
+        `;
+    }
+
+    function startMoleGame() {
+        moleScore = 0;
+        let timeLeft = 30;
+        document.getElementById('mole-score').innerText = moleScore;
+        document.getElementById('mole-time').innerText = timeLeft;
+        document.querySelector('.game-action-btn').style.display = 'none';
+
+        const holes = document.querySelectorAll('.hole');
+        const moles = document.querySelectorAll('.mole');
+
+        function popMole() {
+            const randomHole = holes[Math.floor(Math.random() * holes.length)];
+            const mole = randomHole.querySelector('.mole');
+            mole.classList.add('active');
+            setTimeout(() => {
+                mole.classList.remove('active');
+            }, 800); // Tikus muncul selama 0.8 detik
+        }
+        
+        moles.forEach(mole => mole.addEventListener('click', () => {
+            if(mole.classList.contains('active')) {
+                moleScore++;
+                document.getElementById('mole-score').innerText = moleScore;
+                mole.classList.remove('active');
+            }
+        }));
+
+        moleInterval = setInterval(popMole, 1000); // Munculkan tikus setiap detik
+
+        const timerInterval = setInterval(() => {
+            timeLeft--;
+            document.getElementById('mole-time').innerText = timeLeft;
+            if (timeLeft <= 0) {
+                clearInterval(moleInterval);
+                clearInterval(timerInterval);
+                const earnedCoins = Math.floor(moleScore * 1.5);
+                updateCoins(earnedCoins);
+                showResult(`Waktu habis! Skor akhirmu ${moleScore}. Kamu dapat ${earnedCoins} koin!`, true);
+                gameContent.innerHTML += `<br><br><button class="game-action-btn" onclick="ketukTikusTanah()">Main Lagi</button>`;
+            }
+        }, 1000);
+    }
+    
+    // --- Game 9: Teka-Teki Kata ---
+    const wordList = ['javascript', 'indonesia', 'komputer', 'internet', 'tantangan', 'gemini'];
+    let currentWord;
+
+    function tekaTekiKata() {
+        gameTitle.innerText = 'Teka-Teki Kata';
+        currentWord = wordList[Math.floor(Math.random() * wordList.length)];
+        const scrambledWord = currentWord.split('').sort(() => 0.5 - Math.random()).join('');
+
+        gameContent.innerHTML = `
+            <p>Susun kembali huruf-huruf acak di bawah ini menjadi sebuah kata yang benar:</p>
+            <div style="font-size: 2.5rem; letter-spacing: 5px; margin: 20px 0; font-weight: bold;">${scrambledWord.toUpperCase()}</div>
+            <input type="text" id="wordGuess" class="game-input" placeholder="Tebakanmu...">
+            <button class="game-action-btn" onclick="checkWordGuess()">Cek!</button>
+        `;
+    }
+
+    function checkWordGuess() {
+        const guess = document.getElementById('wordGuess').value.trim().toLowerCase();
+        if (guess === currentWord) {
+            showResult(`✅ Tepat! Jawabannya adalah "${currentWord}". Kamu dapat 25 koin!`, true);
+            updateCoins(25);
+        } else {
+            showResult(`❌ Salah! Jawaban yang benar adalah "${currentWord}".`, false);
+        }
+        gameContent.innerHTML += `<br><br><button class="game-action-btn" onclick="tekaTekiKata()">Soal Lain</button>`;
+        document.querySelector('.game-action-btn').disabled = true;
+    }
+
+
+  </script>
+</body>
+</html>
